@@ -1,0 +1,94 @@
+<div class="products-page bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+    <div class="products-header mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+      <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+        Nuestros Productos
+      </h2>
+      <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">
+        Explora nuestra colección completa de productos tecnológicos
+      </p>
+    </div>
+
+    <div class="filters-section mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+      <div class="grid gap-4 md:grid-cols-3">
+        <div>
+          <label for="search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Buscar
+          </label>
+          <input 
+            type="text" 
+            id="search"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+            placeholder="Buscar productos...">
+        </div>
+
+        <div>
+          <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Categoría
+          </label>
+          <select 
+            id="category"
+            [(ngModel)]="selectedCategory"
+            (ngModelChange)="onCategoryChange()"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option value="all">Todas las categorías</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{category}}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label for="sort" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Ordenar por
+          </label>
+          <select 
+            id="sort"
+            [(ngModel)]="sortBy"
+            (ngModelChange)="onSortChange()"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option value="default">Predeterminado</option>
+            <option value="price-asc">Precio: Menor a Mayor</option>
+            <option value="price-desc">Precio: Mayor a Menor</option>
+            <option value="name">Nombre A-Z</option>
+            <option value="rating">Mejor Valorados</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Mostrando <span class="font-semibold text-gray-900 dark:text-white">{{filteredProducts.length}}</span> producto(s)
+        </p>
+      </div>
+    </div>
+
+    <div *ngIf="filteredProducts.length > 0; else noProducts" 
+         class="products-grid grid gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+      <app-product-card *ngFor="let product of filteredProducts" [product]="product"></app-product-card>
+    </div>
+
+    <ng-template #noProducts>
+      <div class="no-products text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">No se encontraron productos</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Intenta con otros términos de búsqueda.</p>
+        <div class="mt-6">
+          <button 
+            (click)="selectedCategory = 'all'; searchTerm = ''; filterProducts()"
+            type="button" 
+            class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700">
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

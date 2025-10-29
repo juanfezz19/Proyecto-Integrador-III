@@ -1,0 +1,105 @@
+<!-- home.component.html -->
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-badge">✨ Nuevos productos cada semana</span>
+      <h1 class="hero-title">
+        Encuentra la mejor
+        <span class="gradient-text">tecnología</span>
+        al mejor precio
+      </h1>
+      <p class="hero-subtitle">
+        Explora nuestra colección completa de productos tecnológicos. 
+        Calidad garantizada y envío rápido a toda Colombia.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg">
+          Ver Productos
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <button class="btn btn-outline btn-lg">
+          Ver Ofertas
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="floating-card card-1"></div>
+      <div class="floating-card card-2"></div>
+      <div class="floating-card card-3"></div>
+      <div class="hero-circle"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Categorías Populares</h2>
+      <p>Explora nuestras categorías más buscadas</p>
+    </div>
+
+    <div class="grid grid-cols-4">
+      <div class="category-card"><div class="category-icon">💻</div><h3>Laptops</h3><p>+150 productos</p></div>
+      <div class="category-card"><div class="category-icon">📱</div><h3>Smartphones</h3><p>+200 productos</p></div>
+      <div class="category-card"><div class="category-icon">🎧</div><h3>Audio</h3><p>+80 productos</p></div>
+      <div class="category-card"><div class="category-icon">⌚</div><h3>Wearables</h3><p>+50 productos</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="products-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Productos Destacados</h2>
+      <p>Los favoritos de nuestros clientes</p>
+    </div>
+
+    <!-- ✅ Aquí usamos ProductCardComponent -->
+    <div class="grid grid-cols-3 gap-6">
+      <app-product-card 
+        *ngFor="let product of featuredProducts"
+        [product]="product">
+      </app-product-card>
+    </div>
+
+    <div class="text-center mt-5">
+      <button class="btn btn-outline btn-lg">Ver Todos los Productos</button>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="grid grid-cols-4">
+      <div class="feature-box"><div class="feature-icon">🚚</div><h4>Envío Gratis</h4><p>En compras mayores a $200,000</p></div>
+      <div class="feature-box"><div class="feature-icon">🔒</div><h4>Compra Segura</h4><p>Protección en cada transacción</p></div>
+      <div class="feature-box"><div class="feature-icon">↩️</div><h4>Devoluciones</h4><p>30 días para devolver tu producto</p></div>
+      <div class="feature-box"><div class="feature-icon">💬</div><h4>Soporte 24/7</h4><p>Estamos aquí para ayudarte</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-box">
+      <div class="newsletter-content">
+        <h2>¿Quieres ofertas exclusivas?</h2>
+        <p>Suscríbete y recibe descuentos especiales en tu correo</p>
+      </div>
+      <form class="newsletter-form">
+        <input type="email" class="form-input" placeholder="tu@email.com" required>
+        <button type="submit" class="btn btn-primary">Suscribirme</button>
+      </form>
+    </div>
+  </div>
+</section>

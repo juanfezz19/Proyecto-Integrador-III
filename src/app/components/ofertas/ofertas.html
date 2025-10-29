@@ -1,0 +1,116 @@
+<div class="ofertas-page">
+  <div class="ofertas-container">
+    <!-- Header -->
+    <div class="ofertas-header">
+      <div class="header-content">
+        <span class="badge-new">🔥 Nuevo</span>
+        <h1 class="ofertas-title">Ofertas Especiales</h1>
+        <p class="ofertas-subtitle">
+          Aprovecha descuentos increíbles en productos seleccionados
+        </p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando ofertas...</p>
+    </div>
+
+    <!-- Offers Grid -->
+    <div *ngIf="!isLoading && offerProducts.length > 0" class="ofertas-grid">
+      <div *ngFor="let offer of offerProducts" class="offer-card">
+        <!-- Discount Badge -->
+        <div class="discount-badge">
+          -{{offer.discountPercentage}}%
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-timer">
+          <svg class="timer-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Termina en {{getDaysRemaining(offer.offerEndsAt)}} días</span>
+        </div>
+
+        <!-- Product Image -->
+        <a [routerLink]="['/product', offer.id]" class="offer-image-container">
+          <img [src]="offer.image" [alt]="offer.name" class="offer-image">
+        </a>
+
+        <!-- Product Info -->
+        <div class="offer-content">
+          <a [routerLink]="['/product', offer.id]">
+            <h3 class="offer-product-name">{{offer.name}}</h3>
+          </a>
+          
+          <p class="offer-product-category">{{offer.category}}</p>
+
+          <!-- Rating -->
+          <div class="offer-rating">
+            <div class="stars">
+              <svg *ngFor="let i of [1,2,3,4,5]" 
+                   [class.filled]="i <= offer.rating"
+                   class="star" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+            <span class="rating-value">{{offer.rating}}</span>
+          </div>
+
+          <!-- Prices -->
+          <div class="offer-prices">
+            <div class="price-row">
+              <span class="original-price">${{offer.originalPrice | number:'1.2-2'}}</span>
+              <span class="current-price">${{offer.price | number:'1.2-2'}}</span>
+            </div>
+            <span class="savings">
+              Ahorras ${{(offer.originalPrice - offer.price) | number:'1.2-2'}}
+            </span>
+          </div>
+
+          <!-- Stock Info -->
+          <div class="stock-info" *ngIf="offer.stock < 10">
+            <svg class="stock-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            ¡Solo quedan {{offer.stock}} unidades!
+          </div>
+
+          <!-- Action Button -->
+          <a [routerLink]="['/product', offer.id]" class="offer-btn">
+            Ver Oferta
+            <svg class="btn-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 🔽 Añadido ProductCardComponent -->
+      <app-product-card></app-product-card>
+    </div>
+
+    <!-- No Offers State -->
+    <div *ngIf="!isLoading && offerProducts.length === 0" class="no-offers">
+      <div class="no-offers-content">
+        <svg class="no-offers-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+        </svg>
+        <h2 class="no-offers-title">Lo sentimos</h2>
+        <p class="no-offers-text">
+          En este momento no se encuentran nuestros productos en ofertas.
+        </p>
+        <p class="no-offers-subtext">
+          ¡Pero no te preocupes! Vuelve pronto para encontrar las mejores promociones.
+        </p>
+        <a routerLink="/products" class="no-offers-btn">
+          <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Ver Todos los Productos
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

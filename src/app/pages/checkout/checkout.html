@@ -1,0 +1,116 @@
+<div class="checkout-container">
+  <h2>Checkout</h2>
+  
+  <form (ngSubmit)="processOrder()" class="checkout-form">
+    <!-- Sección de información del cliente -->
+    <div class="form-section">
+      <h3>Información de Contacto</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Nombre *</label>
+          <input type="text" id="firstName" name="firstName" 
+                 [(ngModel)]="customerInfo.firstName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Apellido *</label>
+          <input type="text" id="lastName" name="lastName" 
+                 [(ngModel)]="customerInfo.lastName" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" 
+                 [(ngModel)]="customerInfo.email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Teléfono *</label>
+          <input type="tel" id="phone" name="phone" 
+                 [(ngModel)]="customerInfo.phone" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de dirección -->
+    <div class="form-section">
+      <h3>Dirección de Envío</h3>
+      
+      <div class="form-group">
+        <label for="address">Dirección *</label>
+        <input type="text" id="address" name="address" 
+               [(ngModel)]="customerInfo.address" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">Ciudad *</label>
+          <input type="text" id="city" name="city" 
+                 [(ngModel)]="customerInfo.city" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="postalCode">Código Postal *</label>
+          <input type="text" id="postalCode" name="postalCode" 
+                 [(ngModel)]="customerInfo.postalCode" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="country">País</label>
+        <input type="text" id="country" name="country" 
+               [(ngModel)]="customerInfo.country" readonly>
+      </div>
+    </div>
+
+    <!-- Sección de método de pago -->
+    <div class="form-section">
+      <h3>Método de Pago</h3>
+      
+      <div class="payment-methods">
+        <label>
+          <input type="radio" name="paymentMethod" value="credit-card" 
+                 [(ngModel)]="paymentMethod" checked>
+          Tarjeta de Crédito
+        </label>
+        
+        <label>
+          <input type="radio" name="paymentMethod" value="debit-card" 
+                 [(ngModel)]="paymentMethod">
+          Tarjeta de Débito
+        </label>
+        
+        <label>
+          <input type="radio" name="paymentMethod" value="paypal" 
+                 [(ngModel)]="paymentMethod">
+          PayPal
+        </label>
+      </div>
+    </div>
+
+    <!-- Resumen del pedido -->
+    <div class="order-summary">
+      <h3>Resumen del Pedido</h3>
+      <div class="summary-item">
+        <span>Subtotal:</span>
+        <span>${{subtotal | number:'1.2-2'}}</span>
+      </div>
+      <div class="summary-item">
+        <span>Envío:</span>
+        <span>${{shipping | number:'1.2-2'}}</span>
+      </div>
+      <div class="summary-item total">
+        <span>Total:</span>
+        <span>${{total | number:'1.2-2'}}</span>
+      </div>
+    </div>
+
+    <!-- Botón de envío -->
+    <button type="submit" class="submit-btn">
+      Realizar Pedido
+    </button>
+  </form>
+</div>
