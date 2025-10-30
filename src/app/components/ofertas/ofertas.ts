@@ -42,10 +42,15 @@ export class Ofertas implements OnInit {
   }
 
   createOffers(products: Product[]): OfferProduct[] {
+    // Si no hay productos, retornar array vacío
+    if (!products || products.length === 0) {
+      return [];
+    }
+
     // Seleccionar productos aleatoriamente para ofertas
     // Puedes cambiar esta lógica según tus necesidades
     const productsWithOffers = products
-      .slice(0, 4) // Tomar los primeros 4 productos como ejemplo
+      .slice(0, Math.min(4, products.length)) // Tomar los primeros 4 productos como ejemplo (o menos si hay menos productos)
       .map(product => {
         const discountPercentage = this.getRandomDiscount();
         const originalPrice = product.price;
@@ -64,7 +69,7 @@ export class Ofertas implements OnInit {
         };
       });
 
-    // Retornar array vacío si quieres probar el estado "sin ofertas"
+    // Para probar el estado "sin ofertas", descomenta la siguiente línea:
     // return [];
     
     return productsWithOffers;

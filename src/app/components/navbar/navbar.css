@@ -277,6 +277,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.user-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: #38a169;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 /* Responsive */
 @media (max-width: 992px) {
   .navbar-container {

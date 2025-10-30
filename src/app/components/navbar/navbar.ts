@@ -3,6 +3,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService, User } from '../../services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -17,11 +18,29 @@ export class NavbarComponent implements OnInit {
   isScrolled = false;
   isSearchOpen = false;
   searchQuery = '';
+  currentUser: User | null = null;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
-  
+    // Suscribirse a cambios en el usuario
+    this.authService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  // Manejar click en botón de usuario
+  onUserButtonClick(): void {
+    if (this.currentUser) {
+      // Si está logueado, mostrar menú o perfil (por ahora logout)
+      this.authService.logout();
+    } else {
+      // Si no está logueado, ir a login
+      this.router.navigate(['/login']);
+    }
   }
 
   // Toggle del menú móvil
