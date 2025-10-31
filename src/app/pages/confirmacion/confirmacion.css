@@ -1,0 +1,111 @@
+/* Fondo general */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #5b46f7, #6e58ff, #8a63f8);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease infinite;
+}
+
+/* Card central */
+.auth-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeIn 0.8s ease;
+}
+
+/* Icono superior */
+.auth-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #6a4ef5, #8467ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.5rem;
+  box-shadow: 0 4px 12px rgba(90, 60, 255, 0.4);
+}
+
+/* Título principal */
+.auth-card h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: #222;
+}
+
+/* Subtítulo */
+.subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1.8rem;
+  line-height: 1.5;
+}
+
+/* Estado dinámico */
+.status-message {
+  font-weight: 500;
+  color: #4b4b4b;
+  background: #f3f4ff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Spinner animado */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #b7b7ff;
+  border-top: 3px solid #6b4ef7;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Botón */
+.btn-primary {
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(90deg, #6b4ef7, #8a63ff);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #7d5cff, #9b74ff);
+  transform: translateY(-1px);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

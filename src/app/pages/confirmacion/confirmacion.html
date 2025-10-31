@@ -1,0 +1,34 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-icon">
+      <i class="fa-solid fa-envelope-circle-check"></i>
+    </div>
+
+    <h2>Verifica tu correo electrónico</h2>
+    <p class="subtitle">
+      Hemos enviado un enlace de confirmación a tu dirección de correo.  
+      Haz clic en él para activar tu cuenta.
+    </p>
+
+    <!-- Estado del proceso -->
+    <div class="status-message">
+      <ng-container *ngIf="estado === 'Verificando tu correo...'; else resultado">
+        <div class="spinner"></div>
+        <span>{{ estado }}</span>
+      </ng-container>
+
+      <ng-template #resultado>
+        <span>{{ estado }}</span>
+      </ng-template>
+    </div>
+
+    <!-- Botón visible solo si el correo ya está confirmado -->
+    <button
+      *ngIf="estado.includes('confirmado')"
+      (click)="goToDashboard()"
+      class="btn-primary"
+    >
+      Ir al Dashboard
+    </button>
+  </div>
+</div>
