@@ -1,24 +1,20 @@
+// src/app/pages/checkout/checkout.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CartService } from '../../services/cart';
-import { CartItem } from '../../models/cart-item';
+import { OrderService, CreateOrderData } from '../../services/order.service';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './checkout.html',
-  styleUrls: ['./checkout.css'] 
+  styleUrls: ['./checkout.css']
 })
 export class Checkout implements OnInit {
-  cartItems: CartItem[] = [];
-  subtotal: number = 0; 
-  total: number = 0;
-  shipping: number = 0;
-
-  // Datos del formulario
   customerInfo = {
     firstName: '',
     lastName: '',
@@ -31,51 +27,99 @@ export class Checkout implements OnInit {
   };
 
   paymentMethod: string = 'credit-card';
+  
+  subtotal: number = 0;
+  shipping: number = 0;
+  tax: number = 0;
+  total: number = 0;
 
-  constructor(private cartService: CartService) {}
+  isProcessing: boolean = false;
+  errorMessage: string = '';
+
+  constructor(
+    private cartService: CartService,
+    private orderService: OrderService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    // Escuchar cambios del carrito
-    this.cartService.cartItems$.subscribe(items => {
-      this.cartItems = items;
-      this.calculateTotal();
-    });
+    // Verificar si está autenticado
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.calculateTotals();
+    this.loadUserInfo();
   }
 
-  // ✅ Calcula subtotal, impuestos, envío y total
-  calculateTotal(): void {
-    this.subtotal = this.cartService.getTotal(); // guarda el subtotal
-    const tax = this.subtotal * 0.16;
-    this.shipping = this.subtotal > 100 ? 0 : 10;
-    this.total = this.subtotal + tax + this.shipping;
+  loadUserInfo(): void {
+    const user = this.authService.getUserInfo();
+    if (user) {
+      this.customerInfo.firstName = user.firstName;
+      this.customerInfo.lastName = user.lastName;
+      this.customerInfo.email = user.email;
+    }
   }
 
-  // ✅ Procesar pedido
+  calculateTotals(): void {
+    this.subtotal = this.cartService.getTotal();
+    this.shipping = this.subtotal >= 100 ? 0 : 10;
+    this.tax = this.subtotal * 0.16;
+    this.total = this.subtotal + this.shipping + this.tax;
+  }
+
   processOrder(): void {
-    if (this.cartItems.length === 0) {
-      alert('Tu carrito está vacío');
-      return;
-    }
-
+    // Validaciones
     if (!this.validateForm()) {
-      alert('Por favor completa todos los campos requeridos');
+      this.errorMessage = 'Por favor completa todos los campos requeridos';
       return;
     }
 
-    console.log('Procesando pedido...', {
-      customer: this.customerInfo,
-      items: this.cartItems,
-      subtotal: this.subtotal,
-      shipping: this.shipping,
-      total: this.total,
-      paymentMethod: this.paymentMethod
-    });
+    const cartItems = this.cartService.getItems();
+    if (cartItems.length === 0) {
+      this.errorMessage = 'Tu carrito está vacío';
+      return;
+    }
 
-    alert('¡Pedido realizado con éxito!');
-    this.cartService.clearCart();
+    this.isProcessing = true;
+    this.errorMessage = '';
+
+    // Preparar datos de la orden
+    const orderData: CreateOrderData = {
+      items: cartItems.map((item) => ({
+        product_id: item.product.id,
+        quantity: item.quantity,
+        price: item.product.price
+      })),
+      total: this.total,
+      subtotal: this.subtotal,
+      tax: this.tax,
+      shipping: this.shipping,
+      shipping_address: this.customerInfo
+    };
+
+    // Crear orden en Supabase
+    this.orderService.createOrder(orderData).subscribe({
+      next: (orderId) => {
+        this.isProcessing = false;
+        
+        // Limpiar carrito
+        this.cartService.clearCart();
+        
+        // Mostrar mensaje de éxito y redirigir
+        alert(`¡Orden #${orderId} creada exitosamente!`);
+        this.router.navigate(['/inicio']);
+      },
+      error: (error) => {
+        this.isProcessing = false;
+        this.errorMessage = error;
+        console.error('Error al procesar la orden:', error);
+      }
+    });
   }
 
-  // ✅ Validación básica del formulario
   validateForm(): boolean {
     return !!(
       this.customerInfo.firstName &&

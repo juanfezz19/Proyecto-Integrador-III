@@ -1,8 +1,8 @@
+// src/app/pages/cart/cart.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CartService } from '../../services/cart';
-import { CartItem } from '../../models/cart-item';
+import { CartService, CartItem } from '../../services/cart';
 
 @Component({
   selector: 'app-cart',
@@ -14,58 +14,51 @@ import { CartItem } from '../../models/cart-item';
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
   subtotal: number = 0;
-  shipping: number = 10;
+  shipping: number = 0;
   tax: number = 0;
   total: number = 0;
 
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.cartService.cartItems$.subscribe(items => {
-      this.cartItems = items;
-      this.calculateTotals();
-    });
+    this.loadCart();
+  }
+
+  loadCart(): void {
+    this.cartItems = this.cartService.getItems();
+    this.calculateTotals();
   }
 
   calculateTotals(): void {
     this.subtotal = this.cartService.getTotal();
-    this.tax = this.subtotal * 0.16; // 16% IVA
-    
-    // Envío gratis si el subtotal es mayor a $100
-    if (this.subtotal > 100) {
-      this.shipping = 0;
-    }
-    
+    this.shipping = this.subtotal >= 100 ? 0 : 10;
+    this.tax = this.subtotal * 0.16;
     this.total = this.subtotal + this.shipping + this.tax;
   }
 
-  updateQuantity(productId: number, newQuantity: number): void {
-    if (newQuantity > 0) {
-      this.cartService.updateQuantity(productId, newQuantity);
-    }
-  }
-
   removeItem(productId: number): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-      this.cartService.removeFromCart(productId);
-    }
-  }
-
-  clearCart(): void {
-    if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
-      this.cartService.clearCart();
+    if (confirm('¿Estás seguro de eliminar este producto?')) {
+      this.cartService.removeItem(productId);
+      this.loadCart();
     }
   }
 
   increaseQuantity(item: CartItem): void {
-    if (item.quantity < item.product.stock) {
-      this.updateQuantity(item.product.id, item.quantity + 1);
-    }
+    this.cartService.updateQuantity(item.product.id, item.quantity + 1);
+    this.loadCart();
   }
 
   decreaseQuantity(item: CartItem): void {
     if (item.quantity > 1) {
-      this.updateQuantity(item.product.id, item.quantity - 1);
+      this.cartService.updateQuantity(item.product.id, item.quantity - 1);
+      this.loadCart();
+    }
+  }
+
+  clearCart(): void {
+    if (confirm('¿Estás seguro de vaciar el carrito?')) {
+      this.cartService.clearCart();
+      this.loadCart();
     }
   }
 }
