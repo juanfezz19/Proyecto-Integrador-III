@@ -1,8 +1,9 @@
 // src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, from, map, catchError, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, from, map, catchError, of, switchMap, throwError } from 'rxjs';
 import { supabase } from '../config/supabase';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 export interface User {
   id: string;
@@ -37,6 +38,16 @@ export class AuthService {
     
     // Verificar sesión al iniciar
     this.checkSession();
+    
+    // Escuchar cambios en la autenticación
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session);
+      if (session?.user) {
+        await this.loadUserProfile(session.user.id);
+      } else {
+        this.currentUserSubject.next(null);
+      }
+    });
   }
 
   private async checkSession() {
@@ -86,14 +97,13 @@ export class AuthService {
         password: credentials.password
       })
     ).pipe(
-      switchMap(({ data, error }) => {
+      map(({ data, error }) => {
         if (error) throw new Error(error.message);
         if (data.user) {
-          return from(this.loadUserProfile(data.user.id)).pipe(
-            map(() => true)
-          );
+          this.loadUserProfile(data.user.id);
+          return true;
         }
-        return from([false]);
+        return false;
       }),
       catchError((error) => {
         throw error.message || 'Error al iniciar sesión';
@@ -104,35 +114,30 @@ export class AuthService {
   register(data: RegisterData): Observable<boolean> {
     return from(
       supabase.auth.signUp({
-        email: data.email,
-        password: data.password
+        email: data.email, // Correo del usuario
+        password: data.password, // Contraseña del usuario
+        options: {
+          data: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+          },
+        },
       })
     ).pipe(
       switchMap(({ data: authData, error }) => {
-        if (error) throw new Error(error.message);
-        if (!authData.user) throw new Error('Error al crear usuario');
-
-        // Crear perfil de usuario en la tabla users
-        return from(
-          supabase.from('users').insert({
-            id: authData.user.id,
-            email: data.email,
-            first_name: data.firstName,
-            last_name: data.lastName
-          })
-        ).pipe(
-          switchMap(({ error: profileError }) => {
-            if (profileError) throw new Error(profileError.message);
-            
-            // Cargar perfil después de crear
-            return from(this.loadUserProfile(authData.user!.id)).pipe(
-              map(() => true)
-            );
-          })
-        );
+        if (error) {
+          return throwError(() => new Error(error.message));
+        }
+        if (!authData.user) {
+          return throwError(() => new Error('No se pudo crear el usuario.'));
+        }
+        // El perfil se crea automáticamente con el trigger de Supabase.
+        // Solo necesitamos cargar el perfil del usuario.
+        this.loadUserProfile(authData.user.id);
+        return of(true);
       }),
       catchError((error) => {
-        const message = error.message || 'Error al registrarse';
+        const message = error.message || 'Ocurrió un error durante el registro.';
         if (message.includes('already registered')) {
           throw 'Este email ya está registrado';
         }
@@ -149,5 +154,16 @@ export class AuthService {
 
   getUserInfo(): User | null {
     return this.currentUserValue;
+  }
+
+  // Método para obtener el ID del usuario actual (útil para órdenes)
+  getCurrentUserId(): string | null {
+    return this.currentUserValue?.id || null;
+  }
+
+  // Método alternativo usando la sesión de Supabase directamente
+  async getSupabaseUserId(): Promise<string | null> {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.user?.id || null;
   }
 }

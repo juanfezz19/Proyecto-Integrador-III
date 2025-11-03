@@ -102,7 +102,7 @@
         class="action-btn user-btn" 
         (click)="onUserButtonClick()" 
         type="button"
-        [title]="currentUser ? 'Cerrar sesión' : 'Iniciar sesión'" 
+        [title]="currentUser ? 'Ver perfil' : 'Iniciar sesión'" 
         aria-label="Usuario">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
@@ -110,6 +110,7 @@
         </svg>
         <span *ngIf="currentUser" class="user-indicator"></span>
       </button>
+      <span *ngIf="currentUser" class="user-name">{{currentUser.firstName}}</span>
     </div>
   </div>
 </nav>

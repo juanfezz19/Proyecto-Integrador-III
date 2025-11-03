@@ -35,8 +35,8 @@ export class NavbarComponent implements OnInit {
   // Manejar click en botón de usuario
   onUserButtonClick(): void {
     if (this.currentUser) {
-      // Si está logueado, mostrar menú o perfil (por ahora logout)
-      this.authService.logout();
+      // Si está logueado, ir a perfil
+      this.router.navigate(['/perfil']);
     } else {
       // Si no está logueado, ir a login
       this.router.navigate(['/login']);

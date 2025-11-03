@@ -9,6 +9,8 @@ import { ServiciosComponent } from './pages/servicios/servicios';
 import { LoginComponent } from './pages/login/login';
 import { RegisterComponent } from './pages/register/register';
 import { ConfirmacionComponent } from './pages/confirmacion/confirmacion';
+import { AuthCallbackComponent } from './pages/auth-callback/auth-callback';
+import { PerfilComponent } from './pages/perfil/perfil';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -22,5 +24,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'confirmacion', component: ConfirmacionComponent },
+  { path: 'auth/callback', component: AuthCallbackComponent },
+  { path: 'perfil', component: PerfilComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

@@ -15,16 +15,16 @@
         Calidad garantizada y envío rápido a toda Colombia.
       </p>
       <div class="hero-actions">
-        <button class="btn btn-primary btn-lg">
+        <a routerLink="/productos" class="btn btn-primary btn-lg">
           Ver Productos
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
-        </button>
-        <button class="btn btn-outline btn-lg">
+        </a>
+        <a routerLink="/ofertas" class="btn btn-outline btn-lg">
           Ver Ofertas
-        </button>
+        </a>
       </div>
     </div>
 
@@ -46,10 +46,26 @@
     </div>
 
     <div class="grid grid-cols-4">
-      <div class="category-card"><div class="category-icon">💻</div><h3>Laptops</h3><p>+150 productos</p></div>
-      <div class="category-card"><div class="category-icon">📱</div><h3>Smartphones</h3><p>+200 productos</p></div>
-      <div class="category-card"><div class="category-icon">🎧</div><h3>Audio</h3><p>+80 productos</p></div>
-      <div class="category-card"><div class="category-icon">⌚</div><h3>Wearables</h3><p>+50 productos</p></div>
+      <a routerLink="/productos" [queryParams]="{category: 'Electronics'}" class="category-card">
+        <div class="category-icon">💻</div>
+        <h3>Laptops</h3>
+        <p>+150 productos</p>
+      </a>
+      <a routerLink="/productos" [queryParams]="{category: 'Electronics'}" class="category-card">
+        <div class="category-icon">📱</div>
+        <h3>Smartphones</h3>
+        <p>+200 productos</p>
+      </a>
+      <a routerLink="/productos" [queryParams]="{category: 'Electronics'}" class="category-card">
+        <div class="category-icon">🎧</div>
+        <h3>Audio</h3>
+        <p>+80 productos</p>
+      </a>
+      <a routerLink="/productos" [queryParams]="{category: 'Electronics'}" class="category-card">
+        <div class="category-icon">⌚</div>
+        <h3>Wearables</h3>
+        <p>+50 productos</p>
+      </a>
     </div>
   </div>
 </section>
@@ -71,7 +87,7 @@
     </div>
 
     <div class="text-center mt-5">
-      <button class="btn btn-outline btn-lg">Ver Todos los Productos</button>
+      <a routerLink="/productos" class="btn btn-outline btn-lg">Ver Todos los Productos</a>
     </div>
   </div>
 </section>
@@ -80,10 +96,26 @@
 <section class="features-section">
   <div class="container">
     <div class="grid grid-cols-4">
-      <div class="feature-box"><div class="feature-icon">🚚</div><h4>Envío Gratis</h4><p>En compras mayores a $200,000</p></div>
-      <div class="feature-box"><div class="feature-icon">🔒</div><h4>Compra Segura</h4><p>Protección en cada transacción</p></div>
-      <div class="feature-box"><div class="feature-icon">↩️</div><h4>Devoluciones</h4><p>30 días para devolver tu producto</p></div>
-      <div class="feature-box"><div class="feature-icon">💬</div><h4>Soporte 24/7</h4><p>Estamos aquí para ayudarte</p></div>
+      <div class="feature-box">
+        <div class="feature-icon">🚚</div>
+        <h4>Envío Gratis</h4>
+        <p>En compras mayores a $200,000</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">🔒</div>
+        <h4>Compra Segura</h4>
+        <p>Protección en cada transacción</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">↩️</div>
+        <h4>Devoluciones</h4>
+        <p>30 días para devolver tu producto</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">💬</div>
+        <h4>Soporte 24/7</h4>
+        <p>Estamos aquí para ayudarte</p>
+      </div>
     </div>
   </div>
 </section>
@@ -96,8 +128,8 @@
         <h2>¿Quieres ofertas exclusivas?</h2>
         <p>Suscríbete y recibe descuentos especiales en tu correo</p>
       </div>
-      <form class="newsletter-form">
-        <input type="email" class="form-input" placeholder="tu@email.com" required>
+      <form class="newsletter-form" (ngSubmit)="onNewsletterSubmit()">
+        <input type="email" class="form-input" placeholder="tu@email.com" required [(ngModel)]="newsletterEmail" name="email">
         <button type="submit" class="btn btn-primary">Suscribirme</button>
       </form>
     </div>
